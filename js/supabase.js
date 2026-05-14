@@ -4,8 +4,8 @@
  */
 
 // Supabase Configuration
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://kzyezumfhwbckmyfvcri.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6eWV6dW1maHdiY2tteWZ2Y3JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3MzMxMTMsImV4cCI6MjA5NDMwOTExM30.MJxxDbA1usne6bwPjDhbBSruF04gMkZEKu-cj3BCjSA';
 
 // Validate environment variables
 if (!SUPABASE_URL || !SUPABASE_KEY) {
