@@ -1,0 +1,53 @@
+{
+  "name": "ayosph",
+  "version": "1.0.0",
+  "description": "AyosPH - Barangay Community Issue Reporting and Resolution Tracking System",
+  "author": "AyosPH Team",
+  "license": "MIT",
+  "private": true,
+  "keywords": [
+    "barangay",
+    "community",
+    "issue-reporting",
+    "civic-tech",
+    "philippines",
+    "government"
+  ],
+  "scripts": {
+    "start": "http-server . -p 8000 -o",
+    "dev": "http-server . -p 8000 -o --cors",
+    "serve": "python3 -m http.server 8000",
+    "lint": "eslint js/**/*.js --fix",
+    "format": "prettier --write \"**/*.{html,css,js}\"",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+      "no-console": "warn",
+      "no-unused-vars": "warn",
+      "no-undef": "off"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 4,
+    "trailingComma": "es5",
+    "printWidth": 100
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

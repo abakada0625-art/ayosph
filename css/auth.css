@@ -1,0 +1,231 @@
+/* ============================================
+   AUTHENTICATION STYLES
+   ============================================ */
+
+.auth-page {
+    background: linear-gradient(135deg, #0d7377 0%, #14a085 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 1000px;
+    width: 95%;
+    gap: 0;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+    animation: slideUp 0.5s ease-in-out;
+}
+
+.auth-box {
+    background: var(--color-bg);
+    padding: var(--spacing-3xl);
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-side {
+    background: linear-gradient(135deg, #0d7377, #14a085);
+    padding: var(--spacing-3xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.auth-side-content {
+    text-align: center;
+}
+
+.auth-side-content h2 {
+    color: white;
+    margin-bottom: var(--spacing-lg);
+    font-size: 2rem;
+}
+
+.auth-side-content p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: var(--spacing-2xl);
+    font-size: 1.125rem;
+}
+
+.auth-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.benefit {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    color: white;
+}
+
+.benefit-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.benefit p {
+    margin: 0;
+    color: white;
+}
+
+/* Header */
+.auth-header {
+    margin-bottom: var(--spacing-2xl);
+    text-align: center;
+}
+
+.auth-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.brand-icon-large {
+    font-size: 3.5rem;
+}
+
+.auth-brand h1 {
+    margin: 0;
+    color: var(--color-primary);
+    font-size: 2rem;
+}
+
+.auth-subtitle {
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* Form */
+.auth-form {
+    flex: 1;
+}
+
+.form-remember {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    font-size: 0.875rem;
+}
+
+.form-remember label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: 0;
+    font-weight: 400;
+}
+
+.forgot-password {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.form-checkbox {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-checkbox label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    margin-bottom: 0;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+}
+
+.form-checkbox input[type="checkbox"] {
+    margin-top: var(--spacing-xs);
+    cursor: pointer;
+}
+
+.form-checkbox a {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+/* Divider */
+.auth-divider {
+    position: relative;
+    text-align: center;
+    margin: var(--spacing-xl) 0;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.auth-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--color-border);
+}
+
+.auth-divider span {
+    position: relative;
+    background: var(--color-bg);
+    padding: 0 var(--spacing-md);
+}
+
+/* Footer */
+.auth-footer {
+    margin-top: var(--spacing-xl);
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+}
+
+.auth-footer a {
+    color: var(--color-primary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .auth-container {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-side {
+        display: none;
+    }
+
+    .auth-box {
+        padding: var(--spacing-2xl);
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-box {
+        padding: var(--spacing-xl);
+    }
+
+    .auth-header {
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .brand-icon-large {
+        font-size: 2.5rem;
+    }
+
+    .auth-brand h1 {
+        font-size: 1.5rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resident Dashboard - AyosPH</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="dashboard-page">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <button class="sidebar-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="brand">
+                <span class="brand-icon">🏘️</span>
+                <span class="brand-text">AyosPH</span>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="search-box">
+                <input type="text" placeholder="Search reports..." id="searchInput">
+                <span class="search-icon">🔍</span>
+            </div>
+
+            <div class="header-actions">
+                <button class="icon-btn notification-btn" id="notificationBtn">
+                    <span class="icon">🔔</span>
+                    <span class="badge" id="notificationBadge">0</span>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="dropdown-header">Notifications</div>
+                        <div class="notification-list" id="notificationList">
+                            <div class="empty-state">No notifications</div>
+                        </div>
+                    </div>
+                </button>
+
+                <button class="icon-btn profile-btn" id="profileBtn">
+                    <span class="icon">👤</span>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="dropdown-header">Profile</div>
+                        <a href="#" class="dropdown-item">View Profile</a>
+                        <a href="#" class="dropdown-item">Settings</a>
+                        <hr class="dropdown-divider">
+                        <button class="dropdown-item danger" id="logoutBtn">Logout</button>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-view="dashboard">
+                    <span class="icon">📊</span>
+                    <span class="text">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-view="my-reports">
+                    <span class="icon">📋</span>
+                    <span class="text">My Reports</span>
+                </a>
+                <a href="#" class="nav-item" data-view="new-report">
+                    <span class="icon">➕</span>
+                    <span class="text">New Report</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <div class="view-content active" id="dashboardView">
+                <div class="section-header">
+                    <h1>Dashboard</h1>
+                    <p>Welcome back! Here's your community impact.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-info">
+                            <div class="stat-label">Total Reports</div>
+                            <div class="stat-value" id="totalReports">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-info">
+                            <div class="stat-label">Pending</div>
+                            <div class="stat-value" id="pendingReports">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚙️</div>
+                        <div class="stat-info">
+                            <div class="stat-label">In Progress</div>
+                            <div class="stat-value" id="inProgressReports">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <div class="stat-label">Resolved</div>
+                            <div class="stat-value" id="resolvedReports">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <div class="section-header">
+                    <h2>Recent Reports</h2>
+                </div>
+
+                <div class="reports-list" id="recentReportsList">
+                    <div class="empty-state">
+                        <p>No reports yet. <a href="#" onclick="switchView('new-report')">Create your first report</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Reports View -->
+            <div class="view-content" id="myReportsView">
+                <div class="section-header">
+                    <h1>My Reports</h1>
+                    <p>View and manage all your submitted reports</p>
+                </div>
+
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <label>Status:</label>
+                        <select id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Under Review">Under Review</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Fixed">Fixed</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Category:</label>
+                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="Roads">Roads</option>
+                            <option value="Garbage">Garbage</option>
+                            <option value="Drainage">Drainage</option>
+                            <option value="Flooding">Flooding</option>
+                            <option value="Street Lights">Street Lights</option>
+                            <option value="Public Safety">Public Safety</option>
+                            <option value="Infrastructure">Infrastructure</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="reports-table-container">
+                    <table class="reports-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Severity</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsList">
+                            <tr class="empty-row">
+                                <td colspan="6" class="empty-state">No reports found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- New Report View -->
+            <div class="view-content" id="newReportView">
+                <div class="section-header">
+                    <h1>Report an Issue</h1>
+                    <p>Help us solve community problems</p>
+                </div>
+
+                <form id="reportForm" class="report-form">
+                    <div class="form-section">
+                        <h3>Issue Details</h3>
+                        
+                        <div class="form-group">
+                            <label for="reportTitle">Issue Title *</label>
+                            <input 
+                                type="text" 
+                                id="reportTitle" 
+                                name="title" 
+                                placeholder="Brief title of the issue"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reportDescription">Description *</label>
+                            <textarea 
+                                id="reportDescription" 
+                                name="description" 
+                                placeholder="Describe the issue in detail"
+                                rows="5"
+                                required
+                            ></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="reportCategory">Category *</label>
+                                <select id="reportCategory" name="category" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Roads">Roads</option>
+                                    <option value="Garbage">Garbage</option>
+                                    <option value="Drainage">Drainage</option>
+                                    <option value="Flooding">Flooding</option>
+                                    <option value="Street Lights">Street Lights</option>
+                                    <option value="Public Safety">Public Safety</option>
+                                    <option value="Infrastructure">Infrastructure</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reportSeverity">Severity *</label>
+                                <select id="reportSeverity" name="severity" required>
+                                    <option value="">Select Severity</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                    <option value="Emergency">Emergency</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Location & Photo</h3>
+
+                        <div class="form-group">
+                            <label for="reportLocation">Location *</label>
+                            <input 
+                                type="text" 
+                                id="reportLocation" 
+                                name="location" 
+                                placeholder="Street address or landmark"
+                                required
+                            >
+                            <button type="button" class="btn btn-small" id="getLocationBtn">
+                                📍 Get Current Location
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reportImage">Issue Photo *</label>
+                            <div class="image-upload">
+                                <input 
+                                    type="file" 
+                                    id="reportImage" 
+                                    name="image" 
+                                    accept="image/*"
+                                    required
+                                >
+                                <div class="upload-area">
+                                    <span class="upload-icon">📸</span>
+                                    <p>Click to upload or drag and drop</p>
+                                    <p class="upload-hint">PNG, JPG, GIF up to 10MB</p>
+                                </div>
+                                <div class="image-preview" id="imagePreview"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="switchView('dashboard')">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-text">Submit Report</span>
+                            <span class="btn-loader"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Report Detail Modal -->
+    <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Report Details</h2>
+                <button class="modal-close">✕</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Report details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="js/supabase.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/reports.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

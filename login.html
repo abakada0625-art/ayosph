@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AyosPH</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <div class="auth-brand">
+                    <span class="brand-icon-large">🏘️</span>
+                    <h1>AyosPH</h1>
+                </div>
+                <p class="auth-subtitle">Community Issue Reporting System</p>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="you@example.com"
+                        required
+                    >
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password"
+                        required
+                    >
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-remember">
+                    <label>
+                        <input type="checkbox" id="remember" name="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    <span class="btn-text">Sign In</span>
+                    <span class="btn-loader"></span>
+                </button>
+            </form>
+
+            <div class="auth-divider">
+                <span>New to AyosPH?</span>
+            </div>
+
+            <a href="register.html" class="btn btn-secondary btn-block">
+                Create Account
+            </a>
+
+            <div class="auth-footer">
+                <p>By signing in, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
+            </div>
+        </div>
+
+        <div class="auth-side">
+            <div class="auth-side-content">
+                <h2>Welcome Back</h2>
+                <p>Help your barangay thrive by reporting and tracking community issues.</p>
+                <div class="auth-benefits">
+                    <div class="benefit">
+                        <span class="benefit-icon">✓</span>
+                        <p>Track your reports in real-time</p>
+                    </div>
+                    <div class="benefit">
+                        <span class="benefit-icon">✓</span>
+                        <p>Get instant notifications</p>
+                    </div>
+                    <div class="benefit">
+                        <span class="benefit-icon">✓</span>
+                        <p>See proof of resolution</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="js/supabase.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
