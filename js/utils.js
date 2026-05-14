@@ -118,7 +118,8 @@ function isValidEmail(email) {
  */
 function isValidPhone(phone) {
     const re = /^[\d\s+\-()]+$/;
-    const digits = phone.replace(/\D/g, ''); return /^[\d\s+\-()]+$/.test(phone) && digits.length >= 10;
+    const digits = phone.replace(/\D/g, '');
+    return re.test(phone) && digits.length >= 10;
 }
 
 /**
@@ -172,12 +173,12 @@ function requireAuth(redirectAfterLogin = null) {
 }
 
 /**
- * Redirect to admin if not admin
+ * Redirect if not admin
  */
 function requireAdmin() {
     if (!requireAuth()) return false;
-    
-    if (!isAdmin()) {
+    const user = getCurrentUser();
+    if (!user || user.role !== 'admin') {
         showError('Access denied. Admin role required.');
         window.location.href = 'dashboard.html';
         return false;
