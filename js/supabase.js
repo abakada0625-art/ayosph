@@ -127,14 +127,26 @@ class SupabaseClient {
                 body: JSON.stringify({
                     email,
                     password,
-                    user_metadata: userData
+                    data: userData          // Supabase expects metadata under "data" key
                 })
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || 'Signup failed');
+                throw new Error(data.error_description || data.msg || data.message || 'Signup failed');
+            }
+
+            // Store session if email confirmation is disabled
+            if (data.access_token) {
+                const session = {
+                    access_token: data.access_token,
+                    refresh_token: data.refresh_token,
+                    expires_in: data.expires_in,
+                    user: data.user
+                };
+                localStorage.setItem('ayosph_session', JSON.stringify(session));
+                this.headers['Authorization'] = `Bearer ${data.access_token}`;
             }
 
             return data;
@@ -152,22 +164,27 @@ class SupabaseClient {
             const response = await fetch(`${this.url}/auth/v1/token?grant_type=password`, {
                 method: 'POST',
                 headers: this.headers,
-                body: JSON.stringify({
-                    email,
-                    password
-                })
+                body: JSON.stringify({ email, password })
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || 'Login failed');
+                throw new Error(data.error_description || data.msg || data.message || 'Login failed');
             }
 
-            // Store session
-            if (data.session) {
-                localStorage.setItem('ayosph_session', JSON.stringify(data.session));
-            }
+            // Real Supabase password grant returns access_token at top level (not nested under data.session)
+            const session = {
+                access_token: data.access_token,
+                refresh_token: data.refresh_token,
+                expires_in: data.expires_in,
+                user: data.user
+            };
+
+            localStorage.setItem('ayosph_session', JSON.stringify(session));
+
+            // Update auth header for subsequent requests
+            this.headers['Authorization'] = `Bearer ${data.access_token}`;
 
             return data;
         } catch (error) {
@@ -188,8 +205,12 @@ class SupabaseClient {
      * Get current session
      */
     getSession() {
-        const session = localStorage.getItem('ayosph_session');
-        return session ? JSON.parse(session) : null;
+        try {
+            const session = localStorage.getItem('ayosph_session');
+            return session ? JSON.parse(session) : null;
+        } catch {
+            return null;
+        }
     }
 
     /**
@@ -197,7 +218,20 @@ class SupabaseClient {
      */
     isAuthenticated() {
         const session = this.getSession();
-        return !!session && !!session.access_token;
+        return !!(session && session.access_token);
+    }
+
+    /**
+     * Get auth headers including the user's access token
+     */
+    getAuthHeaders() {
+        const session = this.getSession();
+        return {
+            ...this.headers,
+            'Authorization': session?.access_token
+                ? `Bearer ${session.access_token}`
+                : `Bearer ${this.key}`
+        };
     }
 
     /**

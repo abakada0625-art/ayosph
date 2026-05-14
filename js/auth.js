@@ -32,12 +32,10 @@ function initializeLogin() {
         const email = emailInput.value.trim();
         const password = passwordInput.value;
 
-        // Validation
         if (!email || !isValidEmail(email)) {
             showError('Please enter a valid email address');
             return;
         }
-
         if (!password || password.length < 6) {
             showError('Password must be at least 6 characters');
             return;
@@ -47,40 +45,70 @@ function initializeLogin() {
         setButtonLoading(submitBtn, true);
 
         try {
-            // Call Supabase sign in
             const response = await supabase.signIn(email, password);
+            const authUser = response.user || {};
 
-            // Store user info
-            const user = response.user || {};
+            // Update auth header right away so profile fetch is authenticated
+            const session = supabase.getSession();
+            if (session?.access_token) {
+                supabase.headers['Authorization'] = `Bearer ${session.access_token}`;
+            }
+
+            // Fetch the user profile from public.users
+            let profile = null;
+            try {
+                const profiles = await supabase.get('users', `id=eq.${authUser.id}&limit=1`);
+                profile = Array.isArray(profiles) ? profiles[0] : null;
+            } catch (err) {
+                console.warn('Could not fetch profile:', err);
+            }
+
+            // If profile doesn't exist yet, create it now
+            if (!profile) {
+                const meta = authUser.user_metadata || authUser.raw_user_meta_data || {};
+                const newProfile = {
+                    id: authUser.id,
+                    full_name: meta.full_name || email.split('@')[0],
+                    email: authUser.email,
+                    barangay: meta.barangay || 'Unknown',
+                    contact_number: meta.contact_number || '',
+                    role: meta.role || 'resident',
+                    created_at: new Date().toISOString()
+                };
+                try {
+                    await supabase.post('users', newProfile);
+                    profile = newProfile;
+                } catch (err) {
+                    console.warn('Profile insert note:', err);
+                    profile = newProfile; // use local copy anyway
+                }
+            }
+
+            // Store user in localStorage
             setCurrentUser({
-                id: user.id,
-                email: user.email,
-                role: user.user_metadata?.role || 'resident'
+                id: authUser.id,
+                email: authUser.email,
+                full_name: profile.full_name,
+                barangay: profile.barangay,
+                role: profile.role || 'resident'
             });
 
             showSuccess('Login successful!');
 
-            // Redirect based on role
             setTimeout(() => {
                 const redirectUrl = getQueryParam('redirect');
-                if (user.user_metadata?.role === 'admin') {
+                if (profile.role === 'admin') {
                     window.location.href = redirectUrl || 'admin.html';
                 } else {
                     window.location.href = redirectUrl || 'dashboard.html';
                 }
-            }, 500);
+            }, 600);
+
         } catch (error) {
             console.error('Login error:', error);
             showError(error.message || 'Login failed. Please check your credentials.');
         } finally {
             setButtonLoading(submitBtn, false);
-        }
-    });
-
-    // Show/hide password on enter
-    passwordInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            form.dispatchEvent(new Event('submit'));
         }
     });
 }
@@ -165,7 +193,6 @@ function initializeRegister() {
         setButtonLoading(submitBtn, true);
 
         try {
-            // Sign up with Supabase
             const response = await supabase.signUp(email, password, {
                 full_name: fullName,
                 barangay: barangay,
@@ -173,18 +200,18 @@ function initializeRegister() {
                 role: 'resident'
             });
 
-            // Store user info
-            const user = response.user || {};
-            setCurrentUser({
-                id: user.id,
-                email: user.email,
-                role: 'resident'
-            });
+            const authUser = response.user || {};
 
-            // Also create user profile in database
+            // Update auth header if session was returned immediately
+            const session = supabase.getSession();
+            if (session?.access_token) {
+                supabase.headers['Authorization'] = `Bearer ${session.access_token}`;
+            }
+
+            // Save profile to public.users table
             try {
                 await supabase.post('users', {
-                    id: user.id,
+                    id: authUser.id,
                     full_name: fullName,
                     email: email,
                     barangay: barangay,
@@ -192,15 +219,29 @@ function initializeRegister() {
                     role: 'resident',
                     created_at: new Date().toISOString()
                 });
-            } catch (dbError) {
-                console.warn('Profile creation note:', dbError);
+            } catch (dbErr) {
+                console.warn('Profile insert note (may need email confirm first):', dbErr);
             }
 
-            showSuccess('Account created successfully!');
+            // Supabase may require email confirmation before session is active
+            if (!session?.access_token) {
+                showSuccess('Account created! Please check your email to confirm, then log in.');
+                setTimeout(() => { window.location.href = 'login.html'; }, 2500);
+                return;
+            }
 
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 500);
+            // If session is immediately available (email confirm disabled)
+            setCurrentUser({
+                id: authUser.id,
+                email: authUser.email,
+                full_name: fullName,
+                barangay: barangay,
+                role: 'resident'
+            });
+
+            showSuccess('Account created successfully!');
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 600);
+
         } catch (error) {
             console.error('Registration error:', error);
             showError(error.message || 'Registration failed. Please try again.');

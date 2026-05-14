@@ -118,7 +118,7 @@ function isValidEmail(email) {
  */
 function isValidPhone(phone) {
     const re = /^[\d\s+\-()]+$/;
-    return re.length >= 10 && re.test(phone);
+    const digits = phone.replace(/\D/g, ''); return /^[\d\s+\-()]+$/.test(phone) && digits.length >= 10;
 }
 
 /**
